@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Attendance Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .creator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .creator:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .creator a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .creator i {
+            color: #E1306C;
+            font-size: 18px;
+            margin-right: 6px;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+        
+        .description {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #4a86e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 134, 232, 0.2);
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            margin-top: 30px;
+        }
+        
+        .result-box {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-title i {
+            margin-right: 10px;
+            color: #6a11cb;
+        }
+        
+        .percentage {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 15px 0;
+            text-align: center;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #555;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+        
+        .good {
+            background-color: #e6f7ee;
+            color: #0c9960;
+            border-left: 4px solid #0c9960;
+        }
+        
+        .warning {
+            background-color: #fff8e6;
+            color: #d48806;
+            border-left: 4px solid #d48806;
+        }
+        
+        .danger {
+            background-color: #fff1f0;
+            color: #cf1322;
+            border-left: 4px solid #cf1322;
+        }
+        
+        .info {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .calculation {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+            border-left: 4px solid #6a11cb;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 500px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .creator {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+            }
+            
+            .creator a {
+                font-size: 12px;
+            }
+            
+            .creator i {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="creator">
+            <a href="https://www.instagram.com/4wsjad?igsh=MXN0OHpiemViOGU2MA==" target="_blank">
+                <i class="fab fa-instagram"></i> 4wsjad
+            </a>
+        </div>
+        
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> Attendance Calculator</h1>
+            <p class="description">Calculate your attendance percentage and plan your classes</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="total-classes"><i class="fas fa-chalkboard-teacher"></i> Total Classes Held</label>
+                <input type="number" id="total-classes" min="1" placeholder="Enter total number of classes">
+            </div>
+            
+            <div class="input-group">
+                <label for="attended-classes"><i class="fas fa-user-check"></i> Classes Attended</label>
+                <input type="number" id="attended-classes" min="0" placeholder="Enter number of classes attended">
+            </div>
+            
+            <button onclick="calculateAll()"><i class="fas fa-calculator"></i> Calculate Attendance</button>
+            
+            <div class="result-section">
+                <div id="attendance-result" class="result-box">
+                    <div class="result-title">
+                        <i class="fas fa-chart-line"></i> Your Attendance Percentage
+                    </div>
+                    <div id="percentage" class="percentage">0%</div>
+                    <div id="message" class="message"></div>
+                </div>
+                
+                <div id="required-classes-result" class="result-box">
+                    <div class="result-title">
+                        <i class="fas fa-trophy"></i> Reach 75% Attendance
+                    </div>
+                    <div id="required-classes-message" class="message"></div>
+                    <div id="required-classes-calculation" class="calculation"></div>
+                </div>
+                
+                <div id="bunkable-classes-result" class="result-box">
+                    <div class="result-title">
+                        <i class="fas fa-couch"></i> Classes You Can Bunk
+                    </div>
+                    <div id="bunkable-classes-message" class="message"></div>
+                    <div id="bunkable-classes-calculation" class="calculation"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Keep track of your attendance to stay on target with your goals!</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateAll() {
+            // Get input values
+            const totalClasses = parseInt(document.getElementById('total-classes').value);
+            const attendedClasses = parseInt(document.getElementById('attended-classes').value);
+            
+            // Validate inputs
+            if (isNaN(totalClasses) || isNaN(attendedClasses) || totalClasses <= 0) {
+                alert('Please enter valid numbers. Total classes must be greater than zero.');
+                return;
+            }
+            
+            if (attendedClasses > totalClasses) {
+                alert('Attended classes cannot be greater than total classes.');
+                return;
+            }
+            
+            // Calculate current attendance
+            const percentage = (attendedClasses / totalClasses) * 100;
+            const roundedPercentage = percentage.toFixed(2);
+            
+            // Display current attendance
+            document.getElementById('percentage').textContent = `${roundedPercentage}%`;
+            
+            // Display appropriate message
+            const messageElement = document.getElementById('message');
+            messageElement.className = 'message';
+            
+            if (percentage >= 90) {
+                messageElement.textContent = 'Excellent! Your attendance is outstanding.';
+                messageElement.classList.add('good');
+            } else if (percentage >= 75) {
+                messageElement.textContent = 'Good job! Your attendance is satisfactory.';
+                messageElement.classList.add('good');
+            } else if (percentage >= 60) {
+                messageElement.textContent = 'Warning! Your attendance is getting low.';
+                messageElement.classList.add('warning');
+            } else {
+                messageElement.textContent = 'Danger! Your attendance is critically low.';
+                messageElement.classList.add('danger');
+            }
+            
+            // Show attendance result
+            document.getElementById('attendance-result').style.display = 'block';
+            
+            // Calculate and display classes needed for 75%
+            calculateRequiredClasses(totalClasses, attendedClasses, percentage);
+            
+            // Calculate and display bunkable classes
+            calculateBunkableClasses(totalClasses, attendedClasses, percentage);
+        }
+        
+        function calculateRequiredClasses(totalClasses, attendedClasses, currentPercentage) {
+            const resultBox = document.getElementById('required-classes-result');
+            const messageElement = document.getElementById('required-classes-message');
+            const calculationElement = document.getElementById('required-classes-calculation');
+            
+            messageElement.className = 'message';
+            calculationElement.textContent = '';
+            
+            if (currentPercentage >= 75) {
+                messageElement.textContent = 'You already have more than 75% attendance! No additional classes needed.';
+                messageElement.classList.add('good');
+                resultBox.style.display = 'block';
+                return;
+            }
+            
+            // Calculate required classes using formula:
+            // (attended + x) / (total + x) = 0.75
+            // Solving for x: x = (0.75 * total - attended) / 0.25
+            
+            const requiredClasses = Math.ceil((0.75 * totalClasses - attendedClasses) / 0.25);
+            const newTotal = totalClasses + requiredClasses;
+            const newAttended = attendedClasses + requiredClasses;
+            const newPercentage = (newAttended / newTotal * 100).toFixed(2);
+            
+            messageElement.textContent = `You need to attend ${requiredClasses} more classes to reach 75% attendance.`;
+            messageElement.classList.add('info');
+            
+            calculationElement.textContent = 
+                `Calculation: (${attendedClasses} + x) / (${totalClasses} + x) = 0.75 → x = ${requiredClasses}\n` +
+                `New total: ${newTotal} classes, attended: ${newAttended} → ${newPercentage}%`;
+            
+            resultBox.style.display = 'block';
+        }
+        
+        function calculateBunkableClasses(totalClasses, attendedClasses, currentPercentage) {
+            const resultBox = document.getElementById('bunkable-classes-result');
+            const messageElement = document.getElementById('bunkable-classes-message');
+            const calculationElement = document.getElementById('bunkable-classes-calculation');
+            
+            messageElement.className = 'message';
+            calculationElement.textContent = '';
+            
+            if (currentPercentage < 75) {
+                messageElement.textContent = 'Your attendance is below 75%. Focus on attending classes rather than bunking.';
+                messageElement.classList.add('warning');
+                resultBox.style.display = 'block';
+                return;
+            }
+            
+            // Calculate bunkable classes using formula:
+            // attended / (total + x) >= 0.75
+            // Solving for x: x <= (attended / 0.75) - total
+            
+            const bunkableClasses = Math.floor((attendedClasses / 0.75) - totalClasses);
+            
+            if (bunkableClasses <= 0) {
+                messageElement.textContent = 'You cannot bunk any classes without falling below 75% attendance.';
+                messageElement.classList.add('warning');
+                resultBox.style.display = 'block';
+                return;
+            }
+            
+            const newTotal = totalClasses + bunkableClasses;
+            const newPercentage = (attendedClasses / newTotal * 100).toFixed(2);
+            
+            messageElement.textContent = `You can bunk up to ${bunkableClasses} classes without falling below 75%.`;
+            messageElement.classList.add('info');
+            
+            calculationElement.textContent = 
+                `Calculation: ${attendedClasses} / (${totalClasses} + x) >= 0.75 → x <= ${bunkableClasses}\n` +
+                `If you bunk ${bunkableClasses} classes: ${attendedClasses} / ${newTotal} = ${newPercentage}%`;
+            
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
